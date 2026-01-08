@@ -27,6 +27,12 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "frontend", "frontend\", "{B
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "51274"
+		SlnRelativePath = "frontend\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8E6476E0-0677-4D2C-9FDD-E9212455F7C5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
