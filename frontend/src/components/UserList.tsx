@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { userApi } from '../services/api';
 import type { User } from '../services/api';
 import './UserList.css';
 
 const UserList = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -36,6 +38,9 @@ const UserList = () => {
     }
   };
 
+  const handleEdit = (id: number) => {
+    navigate(`/edit/${id}`);
+  };
   if (loading) {
     return (
       <div className="user-list-loading">
@@ -83,6 +88,12 @@ const UserList = () => {
                   <td>{user.phoneNumber || '-'}</td>
                   <td>{user.department || '-'}</td>
                   <td className="actions">
+                    <button
+                      onClick={() => handleEdit(user.id)}
+                      className="user-list-edit-btn"
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => handleDelete(user.id)}
                       className="user-list-delete-btn"
