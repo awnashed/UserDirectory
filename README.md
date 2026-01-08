@@ -54,6 +54,14 @@ A full-stack .NET 8 + React application exposing a REST API for managing directo
 - Dev tooling: Docker, Docker Compose, ESLint (with TypeScript ESLint + React Hooks), xUnit, Moq, EF Core InMemory
 - CI-ready: dotnet CLI, npm scripts (`dev`, `build`, `lint`, `preview`)
 
+## AI & Technology Disclosure
+
+- Development guidance, architectural suggestions, and code snippets were assisted by **GitHub Copilot**
+- AI tools supported documentation drafting and repeatable workflow descriptions; all contributions were reviewed manually before inclusion
+
+
+## Getting Started Overview
+
 - Backend API: `http://localhost:5000/api`
 - Frontend UI: `http://localhost:3000`
 - Swagger docs: `http://localhost:5000/swagger`
