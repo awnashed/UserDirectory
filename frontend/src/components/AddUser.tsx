@@ -1,7 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '../services/api';
+import Toast from './Toast';
 import './AddUser.css';
+
+interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  age?: string;
+  city?: string;
+  state?: string;
+  postCode?: string;
+}
 
 const AddUser = () => {
   const navigate = useNavigate();
@@ -16,8 +27,53 @@ const AddUser = () => {
     state: '',
     postCode: ''
   });
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const validate = (): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    } else if (formData.firstName.length > 100) {
+      newErrors.firstName = 'First name must be 100 characters or less';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    } else if (formData.lastName.length > 100) {
+      newErrors.lastName = 'Last name must be 100 characters or less';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (formData.age < 0 || formData.age > 120) {
+      newErrors.age = 'Age must be between 0 and 120';
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required';
+    }
+
+    if (!formData.state.trim()) {
+      newErrors.state = 'State is required';
+    }
+
+    if (!formData.postCode.trim()) {
+      newErrors.postCode = 'Post code is required';
+    } else if (formData.postCode.length < 4 || formData.postCode.length > 10) {
+      newErrors.postCode = 'Post code must be 4-10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -25,16 +81,25 @@ const AddUser = () => {
       ...formData,
       [name]: name === 'age' ? Number(value) : value
     });
+    if (errors[name as keyof ValidationErrors]) {
+      setErrors({ ...errors, [name]: undefined });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!validate()) {
+      return;
+    }
+
     setLoading(true);
 
     try {
       await userApi.create(formData);
-      navigate('/');
+      setToast({ message: 'User created successfully!', type: 'success' });
+      setTimeout(() => navigate('/'), 1500);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create user');
     } finally {
@@ -44,56 +109,49 @@ const AddUser = () => {
 
   return (
     <div className="add-user-container">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <h2 className="add-user-title">Add New User</h2>
       {error && (
         <div className="add-user-error">
           {error}
         </div>
       )}
-      <form className="add-user-form" onSubmit={handleSubmit}>
+      <form className="add-user-form" onSubmit={handleSubmit} noValidate>
         <div className="add-user-form-group">
-          <label className="add-user-label">
-            First Name *
-          </label>
+          <label className="add-user-label">First Name *</label>
           <input
             type="text"
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            required
-            className="add-user-input"
+            className={`add-user-input ${errors.firstName ? 'input-error' : ''}`}
           />
+          {errors.firstName && <span className="field-error">{errors.firstName}</span>}
         </div>
         <div className="add-user-form-group">
-          <label className="add-user-label">
-            Last Name *
-          </label>
+          <label className="add-user-label">Last Name *</label>
           <input
             type="text"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            required
-            className="add-user-input"
+            className={`add-user-input ${errors.lastName ? 'input-error' : ''}`}
           />
+          {errors.lastName && <span className="field-error">{errors.lastName}</span>}
         </div>
         <div className="add-user-form-group">
-          <label className="add-user-label">
-            Email *
-          </label>
+          <label className="add-user-label">Email *</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
-            className="add-user-input"
+            className={`add-user-input ${errors.email ? 'input-error' : ''}`}
           />
+          {errors.email && <span className="field-error">{errors.email}</span>}
         </div>
         <div className="add-user-form-group">
-          <label className="add-user-label">
-            Phone Number
-          </label>
+          <label className="add-user-label">Phone Number</label>
           <input
             type="tel"
             name="phoneNumber"
