@@ -10,15 +10,20 @@ const AddUser = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    department: ''
+    department: '',
+    age: 0,
+    city: '',
+    state: '',
+    postCode: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: name === 'age' ? Number(value) : value
     });
   };
 
@@ -97,7 +102,7 @@ const AddUser = () => {
             className="add-user-input"
           />
         </div>
-        <div className="add-user-form-group-last">
+        <div className="add-user-form-group">
           <label className="add-user-label">
             Department
           </label>
@@ -106,6 +111,62 @@ const AddUser = () => {
             name="department"
             value={formData.department}
             onChange={handleChange}
+            className="add-user-input"
+          />
+        </div>
+        <div className="add-user-form-group">
+          <label className="add-user-label">
+            Age *
+          </label>
+          <input
+            type="number"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            required
+            min={0}
+            max={120}
+            className="add-user-input"
+          />
+        </div>
+        <div className="add-user-form-group">
+          <label className="add-user-label">
+            City *
+          </label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+            className="add-user-input"
+          />
+        </div>
+        <div className="add-user-form-group">
+          <label className="add-user-label">
+            State *
+          </label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            required
+            className="add-user-input"
+          />
+        </div>
+        <div className="add-user-form-group-last">
+          <label className="add-user-label">
+            Post Code *
+          </label>
+          <input
+            type="text"
+            name="postCode"
+            value={formData.postCode}
+            onChange={handleChange}
+            required
+            minLength={4}
+            maxLength={10}
             className="add-user-input"
           />
         </div>

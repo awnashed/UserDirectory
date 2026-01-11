@@ -7,6 +7,10 @@ export interface User {
   email: string;
   phoneNumber?: string;
   department?: string;
+  age: number;
+  city: string;
+  state: string;
+  postCode: string;
 }
 
 export const userApi: {

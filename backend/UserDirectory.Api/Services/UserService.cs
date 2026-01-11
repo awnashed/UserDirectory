@@ -41,6 +41,10 @@ public class UserService : IUserService
         existingUser.Email = user.Email;
         existingUser.PhoneNumber = user.PhoneNumber;
         existingUser.Department = user.Department;
+        existingUser.Age = user.Age;
+        existingUser.City = user.City;
+        existingUser.State = user.State;
+        existingUser.PostCode = user.PostCode;
         existingUser.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
